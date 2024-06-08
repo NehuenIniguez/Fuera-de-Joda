@@ -4,8 +4,9 @@ import Preload from "./scenes/Preload.js";
 // Create a new Phaser config object
 const config = {
   type: Phaser.AUTO,
-  width: 800,
-  height: 600,
+  width: 1729,
+  height: 980,
+  pixelArt: true,
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
@@ -14,8 +15,8 @@ const config = {
       height: 600,
     },
     max: {
-      width: 1600,
-      height: 1200,
+      width: 1729,
+      height: 980,
     },
   },
   physics: {
