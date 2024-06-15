@@ -43,16 +43,18 @@ export default class Game extends Phaser.Scene {
 
     this.mira = this.physics.add.sprite(400, 300, "Mira");
 
-    //agregamos precolectables
+    //agregamos recolectables
     this.recolectables = this.physics.add.group();
     this.physics.add.collider(this.personaje,this.recolectables, this.loseCondition, null,this);
     this.physics.add.collider(this.recolectables,this.plataformas, this.GoOut, null, this );
-    this.physics.add.collider(this.mira,this.recolectables, this.Recolect, null,this);
+    this.physics.add.overlap(this.mira,this.recolectables, this.Recolect, null,this);
 
     // adicion de teclas para movimiento de personaje
     this.a = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
     this.d = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
-    //this.r = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
+    this.r = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
+
+    
 
     //se agrega el score
    this.textScore = this.add
@@ -82,6 +84,10 @@ export default class Game extends Phaser.Scene {
       callbackScope: this,
       loop: true,
     })
+
+    //reconocimiento del movimiento de mouse
+     this.pointer = this.input.activePointer;
+
   }
   
   HandlerTimer(){
@@ -91,37 +97,62 @@ export default class Game extends Phaser.Scene {
 
   OnSecond(){
     const tipos= ["tomate", "botella", "zapato"];
+
     const tipo = Phaser.Math.RND.pick(tipos);
-    const side = Phaser.Math.Between(0, 1); // 0 para la izquierda, 1 para la derecha
+
+    const side = Phaser.Math.Between(0, 1) // 0 para la izquierda, 1 para la derecha
+  
     let x = (side === 0) ? -50 : 1730; // Fuera de la pantalla a la izquierda o derecha
+
     let y = Phaser.Math.Between(50, 550); // Altura aleatoria en la pantalla
-     let recolectables = this.recolectables.create(x,y,tipo);
-    recolectables.setVelocityX((side === 0) ? 400 : -500); // Mover el objeto hacia el centro
+
+    let recolectable = this.recolectables.create(x,y,tipo);
+    recolectable.setVelocityX((side === 0) ? 500 : -500); // Mover el objeto hacia el centro
+
+    recolectable.setGravity(400)
    
     //this.recolectables.setVelocity(100,50)
   }
-loseCondition(){
+  loseCondition(_personaje,_recolectable){
+    
+    this.scene.pause();
+    
+    this.gameOver=true;
+ 
+  }
+  GoOut(){
 
-}
-GoOut(){
+  }
+  Recolect(_mira, recolectable){
+    if (this.pointer.isDown){
+      recolectable.destroy()
+    }
+ 
 
-}
-Recolect(){
+
+  }
   
-}
   update() {
-    //reconocimiento del movimiento de mouse
-    const pointer = this.input.activePointer;
-
-    //se mueve el personaje con el mouse
-    this.mira.x = pointer.x;
-    this.mira.y = pointer.y;
+    //se mueve la mira con el mouse
+    this.mira.x = this.pointer.x;
+    this.mira.y = this.pointer.y;
     
     if(this.a.isDown){
       this.personaje.setVelocityX(-160)
     } else if (this.d.isDown){
       this.personaje.setVelocityX(160)
     } else this.personaje.setVelocityX(0);
-
+   
+    if ( this.gameOver ) {
+      this.physics.pause();  
+      return;
+    }
+    
+    if(this.r.isDown && this.gameOver) {
+      console.log("reincia")
+      this.scene.restart(`Game`);
+      
+    }
   }
+  
 }
