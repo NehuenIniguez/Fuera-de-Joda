@@ -13,13 +13,14 @@ export default class Preload extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image("Gilberto", "../public/assets/yo.png");
+    this.load.image("Gilberto", "../public/assets/yo.jpeg");
     this.load.image("Escenario", "../public/assets/escenario.png");
     this.load.image("Mira", "../public/assets/mira.png");
     this.load.image("Tile", "../public/assets/tile.png");
-    this.load.image("tomate", "./plubilc/assets/yo.jpeg");
-    this.load.image("zapato", "./plubilc/assets/zapato.png");
-    this.load.image("botella", "./plubilc/assets/botella.png")
+    this.load.image("tomate", "./public/assets/tomate.png");
+    this.load.image("zapato", "./public/assets/zapato.png");
+    this.load.image("botella", "./public/assets/botella.png")
+    
   }
 
   create() {
