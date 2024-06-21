@@ -116,7 +116,11 @@ export default class Game extends Phaser.Scene {
     recolectable.setGravity(400)
    
     //this.recolectables.setVelocity(100,50)
+     // Establecer datos adicionales
+    recolectable.setData("tipo", tipo);
+    recolectable.setData("points", this.shapes[tipo].points);
   }
+
   loseCondition(_personaje,_recolectable){
    this.scene.start("Gameover", {
         score: this.score,
@@ -131,19 +135,24 @@ export default class Game extends Phaser.Scene {
 
       this.score += puntosFig;
 
-      const points= recolectable.getData("points")
+      const points= recolectable.getData("points");
       
       this.shapes [nombreFig].count += 1;
+      
       console.table(this.shapes);
+      
       console.log("score", this.score);
-    
-      recolectable.destroy()
+     
       this.textScore.setText(
       ` ${this.score}`)
+       
+      recolectable.destroy()
+  }
+    
+     
+      
     }
     
-
-  }
   
   update(time, deltatime) {
     
