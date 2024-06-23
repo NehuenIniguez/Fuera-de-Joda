@@ -1,9 +1,5 @@
-// URL to explain PHASER scene: https://rexrainbow.github.io/phaser3-rex-notes/docs/site/scene/
-
 export default class Game extends Phaser.Scene {
   constructor() {
-    // key of the scene
-    // the key will be used to start the scene by other scenes
     super("Game");
   }
 
@@ -16,16 +12,19 @@ export default class Game extends Phaser.Scene {
       zapato: {points: 50, count: 0},
       botella: {points: 70, count: 0}
     }
-    
+    this.baseSpeed = 500; // Velocidad base
+    this.speedIncrease = 10; // Incremento de velocidad por segundo
   }
+  
 
   create() {
     // creacion de escenario
-   
     this.centerX = this.game.config.width / 2;
     this.centerY = this.game.config.height / 2;
     this.background = this.add.image(this.centerX, this.centerY, "Escenario");
    
+    this.addSounds()
+
     // creacion del tile
     this.tile = this.add.image(this.centerX,980, "Tile")
     
@@ -82,14 +81,15 @@ export default class Game extends Phaser.Scene {
   
 
     this.time.addEvent({
-      delay: 1000,
+      delay: 900,
       callback: this.OnSecond,
       callbackScope: this,
       loop: true,
     })
 
     //reconocimiento del movimiento de mouse
-     this.pointer = this.input.activePointer;
+   this.pointer = this.input.activePointer;
+   this.events.on('shutdown', this.shutdown, this);
 
   }
   
@@ -109,7 +109,7 @@ export default class Game extends Phaser.Scene {
     let x = (side === 0) ? -10 : 1730; // Fuera de la pantalla a la izquierda o derecha
 
     let y = Phaser.Math.Between(50, 550); // Altura aleatoria en la pantalla
-
+    
     let recolectable = this.recolectables.create(x,y,tipo);
     recolectable.setVelocityX((side === 0) ? 600 : -900); // Mover el objeto hacia el centro
 
@@ -119,6 +119,7 @@ export default class Game extends Phaser.Scene {
      // Establecer datos adicionales
     recolectable.setData("tipo", tipo);
     recolectable.setData("points", this.shapes[tipo].points);
+    recolectable.setData("baseSpeed", this.baseSpeed);
   }
 
   loseCondition(_personaje,_recolectable){
@@ -147,15 +148,24 @@ export default class Game extends Phaser.Scene {
       ` ${this.score}`)
        
       recolectable.destroy()
+    }  
+ }
+  
+  addSounds(){
+    this.backgroundMusic = this.sound.add("gameplay",{
+      volume: 0.5,
+      loop: true
+    });
+    this.backgroundMusic.play();
   }
-    
-     
-      
-    }
-    
+  shutdown(){
+    if(this.backgroundMusic){
+      this.backgroundMusic.stop()
+      console.log("se detiene la musica")
+  }
+ }
   
   update(time, deltatime) {
-    
     //se mueve la mira con el mouse
     this.mira.x = this.pointer.x;
     this.mira.y = this.pointer.y;
@@ -176,6 +186,16 @@ export default class Game extends Phaser.Scene {
       this.scene.restart();
     
     }
+    let deltaInSeconds = deltatime / 1000;
+     this.timer += deltaInSeconds;
+
+    this.recolectables.children.iterate((recolectable) => {
+      const baseSpeed = recolectable.getData("baseSpeed");
+      const newSpeed = baseSpeed + this.speedIncrease * this.timer;
+      const direction = recolectable.body.velocity.x > 0 ? 1 : -1;
+      recolectable.setVelocityX(newSpeed * direction);
+      delay:500;
+    });
   }
   
 }
