@@ -21,12 +21,13 @@ export default class Preload extends Phaser.Scene {
     this.load.image("zapato", "./public/assets/zapato.png");
     this.load.image("botella", "./public/assets/botella.png");
     this.load.audio("gameplay", "./public/assets/Pista2.wav");
+    this.load.image("globo", "./public/assets/globoTexto.png")
     
   }
 
   create() {
     // create game objects
-   this.scene.start("Game")
+   this.scene.start("Pantalla1")
   }
 
   update() {

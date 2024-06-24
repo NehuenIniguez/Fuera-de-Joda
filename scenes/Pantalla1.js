@@ -19,7 +19,7 @@ export default class Pantalla1 extends Phaser.Scene {
   this.centerX = this.game.config.width / 2;
   this.centerY = this.game.config.height / 2;
   
-  this.MenuBackground = this.add.image(this.centerX, this.centerY,"Fondo")
+  this.AddMenuBackground()
   
   this.events.on('shutdown', this.shutdown, this);
 
@@ -42,7 +42,11 @@ export default class Pantalla1 extends Phaser.Scene {
   }
  }
   
-
+AddMenuBackground(){
+  this.MenuBackground = this.add.image(this.centerX, this.centerY,"Fondo");
+  this.MenuBackground.displayWidth = this.game.config.width;
+  this.MenuBackground.displayHeight = this.game.config.height;
+}
  inicio(pointer){
     this.scene.start("Game")
 

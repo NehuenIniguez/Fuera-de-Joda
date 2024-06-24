@@ -14,6 +14,7 @@ export default class Game extends Phaser.Scene {
     }
     this.baseSpeed = 500; // Velocidad base
     this.speedIncrease = 10; // Incremento de velocidad por segundo
+    
   }
   
 
@@ -27,12 +28,33 @@ export default class Game extends Phaser.Scene {
 
     // creacion del tile
     this.tile = this.add.image(this.centerX,980, "Tile")
-    
+     
     //creacion de personaje
-
     this.personaje = this.physics.add.sprite(this.centerX, 650, "Gilberto");
     this.personaje.setScale(0.5);
     this.personaje.setCollideWorldBounds(true);
+   
+    //globo de texto
+    this.globoTexto = this.add.image(this.personaje.x + 300, this.personaje.y-250, "globo")
+
+    this.dialoge= [
+    "¿Qué hace un perro con un taladro? Taladrando",
+    "¿Cuál es el país que ríe y explota?Ja-pon",
+    "¿Ustedes saben que viene después  de USA? USB",
+    "¿Saben la diferencia entre un volcán  y un terremoto?    Que el el terremoto ensucia y el volcán lava",
+    "¿Qué hace una abeja en el gimnasio?¡Zum-ba!",
+    "Niki nikol si o no?"
+    ]
+    //se agregan chistes  
+    const chiste = Phaser.Math.RND.pick(this.dialoge);
+    this.Text = this.add.text(this.personaje.x + 120, this.personaje.y-320, ` ${chiste} `,{
+      fontSize: "25px Arial",
+      fill: "#000",
+      wordWrap: { width: this.globoTexto.width }
+    })
+
+    this.HandlerTimer()
+        
 
     this.mira = this.physics.add.sprite(400, 300, "Mira");
 
@@ -46,7 +68,6 @@ export default class Game extends Phaser.Scene {
     this.d = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
     this.r = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
 
-    
 
     //se agrega el score
    this.textScore = this.add
@@ -56,29 +77,7 @@ export default class Game extends Phaser.Scene {
       })
     .setOrigin(1, 0);
   
-    //evento de un segundo
-   this.time.addEvent({
-      delay: 1000,
-      callback: this.HandlerTimer,
-      callbackScope: this,
-      loop: true,
-  });
-  
-  const dialoge= [
-      "¿Qué hace un perro con un taladro?... Taladrando",
-      "¿Cuál es el país que ríe y explota?... Ja-pon",
-      "¿Ustedes saben que viene después de USA?... USB",
-      "¿Saben la diferencia entre un volcán y un terremoto?... Que el el terremoto ensucia y el volcán lava",
-      "¿Qué hace una abeja en el gimnasio? ¡Zum-ba!",
-      "CUCA caLVO"
-    ]
-  //se agrega timer en la esquina superior 
-    const chiste = Phaser.Math.RND.pick(dialoge);
-    this.timerText = this.add.text(10,10, ` ${chiste} `,{
-      fontSize: "30px",
-      fill: "#fff"
-    })
-  
+   
 
     this.time.addEvent({
       delay: 900,
@@ -93,11 +92,35 @@ export default class Game extends Phaser.Scene {
 
   }
   
- // HandlerTimer(){
- //   const chiste = Phaser.Math.RND.pick(dialoge);
- //   //this.timer+=1;
- //   this.timerText.setText(`Aguante de ${chiste} segundos`);
- // }
+  HandlerTimer(){
+   this.time.addEvent({
+      delay: 4000, // Mostrar el globo de texto durante 2 segundos al inicio
+      callback: () => {
+        // Configurar el temporizador para alternar la visibilidad del globo de texto
+        this.time.addEvent({
+          delay: 3000, // Cada 2 segundos
+          callback: this.toggleSpeechBubble,
+          callbackScope: this,
+          loop: true
+        });
+      },
+            callbackScope: this
+        });
+  }
+
+  toggleSpeechBubble() {
+   if (this.globoTexto.visible) {
+      // Ocultar el globo de texto y el texto
+      this.globoTexto.setVisible(false);
+      this.Text.setVisible(false);
+    } else {
+      // Mostrar el globo de texto y el texto
+      const randomDialogue = Phaser.Math.RND.pick(this.dialoge);
+      this.Text.setText(randomDialogue);
+      this.globoTexto.setVisible(true);
+      this.Text.setVisible(true);
+    }
+  }
 
   OnSecond(){
     const tipos= ["tomate", "botella", "zapato"];
@@ -171,9 +194,9 @@ export default class Game extends Phaser.Scene {
     this.mira.y = this.pointer.y;
     
     if(this.a.isDown){
-      this.personaje.setVelocityX(-160)
+      this.personaje.setVelocityX(-260)
     } else if (this.d.isDown){
-      this.personaje.setVelocityX(160)
+      this.personaje.setVelocityX(260)
     } else this.personaje.setVelocityX(0);
    
     if ( this.gameOver ) {
@@ -196,6 +219,9 @@ export default class Game extends Phaser.Scene {
       recolectable.setVelocityX(newSpeed * direction);
       delay:500;
     });
+
+   this.globoTexto.setPosition(this.personaje.x + 300, this.personaje.y-250,);
+   this.Text.setPosition(this.personaje.x + 120, this.personaje.y-320,);
   }
   
 }
