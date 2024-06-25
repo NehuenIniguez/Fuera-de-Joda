@@ -1,20 +1,16 @@
 export default class Preload extends Phaser.Scene {
   constructor() {
-    // key of the scene
-    // the key will be used to start the scene by other scenes
+   
     super("Preload");
   }
 
   init() {
-    // this is called before the scene is created
-    // init variables
-    // take data passed from other scenes
-    // data object param {}
+  
   }
 
   preload() {
     this.load.spritesheet("Gilberto","../public/assets/Gilberto.png",{
-      frameWidth: 346,
+      frameWidth: 328 ,
       frameHeight: 500,
     });
     //this.load.image("Gilberto", "../public/assets/Nehue.pj.png");
@@ -42,9 +38,9 @@ export default class Preload extends Phaser.Scene {
       key: "run",
       frames: this.anims.generateFrameNumbers("Gilberto", {
         start: 0,
-        end: 3,
+        end: 6,
       }),
-      frameRate: 10,
+      frameRate: 7,
       repeat: -1,
     });
   }
