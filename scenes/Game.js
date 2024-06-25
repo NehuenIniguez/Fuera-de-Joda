@@ -31,7 +31,7 @@ export default class Game extends Phaser.Scene {
      
     //creacion de personaje
     this.personaje = this.physics.add.sprite(this.centerX, 650, "Gilberto");
-    this.personaje.setScale(0.5);
+    
     this.personaje.setCollideWorldBounds(true);
    
     //globo de texto
@@ -76,8 +76,6 @@ export default class Game extends Phaser.Scene {
       fill: "#fff",
       })
     .setOrigin(1, 0);
-  
-   
 
     this.time.addEvent({
       delay: 900,
@@ -94,11 +92,11 @@ export default class Game extends Phaser.Scene {
   
   HandlerTimer(){
    this.time.addEvent({
-      delay: 4000, // Mostrar el globo de texto durante 2 segundos al inicio
+      delay: 2000, // Mostrar el globo de texto durante 2 segundos al inicio
       callback: () => {
         // Configurar el temporizador para alternar la visibilidad del globo de texto
         this.time.addEvent({
-          delay: 3000, // Cada 2 segundos
+          delay: 5000, // Cada 2 segundos
           callback: this.toggleSpeechBubble,
           callbackScope: this,
           loop: true
@@ -193,10 +191,23 @@ export default class Game extends Phaser.Scene {
     this.mira.x = this.pointer.x;
     this.mira.y = this.pointer.y;
     
-    if(this.a.isDown){
-      this.personaje.setVelocityX(-260)
+   if ( this.d.isDown) {
+          this.personaje.play('run', true);
+          this.personaje.flipX = false
+        } else if(this.a.isDown ) {
+          this.personaje.play('run', true);
+          this.personaje.flipX = true
+        }
+        else  {
+          this.personaje.stop();
+        }
+    if(this.a.isDown)
+    {
+      
+      this.personaje.setVelocityX(-360);
     } else if (this.d.isDown){
-      this.personaje.setVelocityX(260)
+      
+      this.personaje.setVelocityX(360);
     } else this.personaje.setVelocityX(0);
    
     if ( this.gameOver ) {
@@ -210,7 +221,7 @@ export default class Game extends Phaser.Scene {
     
     }
     let deltaInSeconds = deltatime / 1000;
-     this.timer += deltaInSeconds;
+    this.timer += deltaInSeconds;
 
     this.recolectables.children.iterate((recolectable) => {
       const baseSpeed = recolectable.getData("baseSpeed");
