@@ -6,7 +6,7 @@ export default class Preload extends Phaser.Scene {
   init() {}
 
   preload() {
-    this.load.spritesheet("Gilberto", "/public/assets/Gilberto.png", {
+    this.load.spritesheet("Gilberto", "./public/assets/Gilberto.png", {
       frameWidth: 328,
       frameHeight: 500,
     });
