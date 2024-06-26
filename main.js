@@ -22,9 +22,7 @@ const config = {
   },
   physics: {
     default: "arcade",
-    arcade: {
-      debug: false,
-    },
+    arcade: {},
   },
   // List of scenes to load
   // Only the first scene will be shown
