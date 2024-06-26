@@ -16,13 +16,7 @@ export default class Game extends Phaser.Scene {
       zapato: {points: 50, count: 0},
       botella: {points: 70, count: 0}
     }
-    this.dialoge= {
-      chiste_uno: {uno:"¿Qué hace un perro con un taladro?... Taladrando"},
-      chiste_dos: {dos: "¿Cuál es el país que ríe y explota?... Ja-pon"},
-      chiste_tres: {tres:"¿Ustedes saben que viene después de USA?... USB"},
-      chiste_cuatro: {cuatro: "¿Saben la diferencia entre un volcán y un terremoto?... Que el el terremoto ensucia y el volcán lava"},
-      chiste_cinco: {cinco: "¿Qué hace una abeja en el gimnasio? ¡Zum-ba!"}
-    }
+    
   }
 
   create() {
@@ -37,8 +31,8 @@ export default class Game extends Phaser.Scene {
     
     //creacion de personaje
 
-    this.personaje = this.physics.add.sprite(this.centerX, 750, "Gilberto");
-    this.personaje.setScale(2);
+    this.personaje = this.physics.add.sprite(this.centerX, 650, "Gilberto");
+    this.personaje.setScale(0.5);
     this.personaje.setCollideWorldBounds(true);
 
     this.mira = this.physics.add.sprite(400, 300, "Mira");
@@ -46,7 +40,6 @@ export default class Game extends Phaser.Scene {
     //agregamos recolectables
     this.recolectables = this.physics.add.group();
     this.physics.add.collider(this.personaje,this.recolectables, this.loseCondition, null,this);
-    this.physics.add.collider(this.recolectables,this.plataformas, this.GoOut, null, this );
     this.physics.add.overlap(this.mira,this.recolectables, this.Recolect, null,this);
 
     // adicion de teclas para movimiento de personaje
@@ -71,9 +64,19 @@ export default class Game extends Phaser.Scene {
       callbackScope: this,
       loop: true,
   });
-    //se agrega timer en la esquina superior 
-    this.timerText = this.add.text(10,10, `Aguante de ${this.timer} segundos`,{
-      fontSize: "70px",
+  
+  const dialoge= [
+      "¿Qué hace un perro con un taladro?... Taladrando",
+      "¿Cuál es el país que ríe y explota?... Ja-pon",
+      "¿Ustedes saben que viene después de USA?... USB",
+      "¿Saben la diferencia entre un volcán y un terremoto?... Que el el terremoto ensucia y el volcán lava",
+      "¿Qué hace una abeja en el gimnasio? ¡Zum-ba!",
+      "CUCA caLVO"
+    ]
+  //se agrega timer en la esquina superior 
+    const chiste = Phaser.Math.RND.pick(dialoge);
+    this.timerText = this.add.text(10,10, ` ${chiste} `,{
+      fontSize: "30px",
       fill: "#fff"
     })
   
@@ -90,10 +93,11 @@ export default class Game extends Phaser.Scene {
 
   }
   
-  HandlerTimer(){
-    this.timer+=1;
-    this.timerText.setText(`Aguante de ${this.timer} segundos`);
-  }
+ // HandlerTimer(){
+ //   const chiste = Phaser.Math.RND.pick(dialoge);
+ //   //this.timer+=1;
+ //   this.timerText.setText(`Aguante de ${chiste} segundos`);
+ // }
 
   OnSecond(){
     const tipos= ["tomate", "botella", "zapato"];
@@ -102,37 +106,56 @@ export default class Game extends Phaser.Scene {
 
     const side = Phaser.Math.Between(0, 1) // 0 para la izquierda, 1 para la derecha
   
-    let x = (side === 0) ? -50 : 1730; // Fuera de la pantalla a la izquierda o derecha
+    let x = (side === 0) ? -10 : 1730; // Fuera de la pantalla a la izquierda o derecha
 
     let y = Phaser.Math.Between(50, 550); // Altura aleatoria en la pantalla
 
     let recolectable = this.recolectables.create(x,y,tipo);
-    recolectable.setVelocityX((side === 0) ? 500 : -500); // Mover el objeto hacia el centro
+    recolectable.setVelocityX((side === 0) ? 600 : -900); // Mover el objeto hacia el centro
 
     recolectable.setGravity(400)
    
     //this.recolectables.setVelocity(100,50)
+     // Establecer datos adicionales
+    recolectable.setData("tipo", tipo);
+    recolectable.setData("points", this.shapes[tipo].points);
   }
-  loseCondition(_personaje,_recolectable){
-    
-    this.scene.pause();
-    
-    this.gameOver=true;
- 
-  }
-  GoOut(){
 
+  loseCondition(_personaje,_recolectable){
+   this.scene.start("Gameover", {
+        score: this.score,
+        gameOver: this.gameOver
+      })
+ 
   }
   Recolect(_mira, recolectable){
     if (this.pointer.isDown){
+      const nombreFig = recolectable.getData("tipo");
+      const puntosFig = recolectable.getData("points");
+
+      this.score += puntosFig;
+
+      const points= recolectable.getData("points");
+      
+      this.shapes [nombreFig].count += 1;
+      
+      console.table(this.shapes);
+      
+      console.log("score", this.score);
+     
+      this.textScore.setText(
+      ` ${this.score}`)
+       
       recolectable.destroy()
-    }
- 
-
-
   }
+    
+     
+      
+    }
+    
   
-  update() {
+  update(time, deltatime) {
+    
     //se mueve la mira con el mouse
     this.mira.x = this.pointer.x;
     this.mira.y = this.pointer.y;
@@ -144,14 +167,14 @@ export default class Game extends Phaser.Scene {
     } else this.personaje.setVelocityX(0);
    
     if ( this.gameOver ) {
-      this.physics.pause();  
+      this.scene.pause();  
       return;
     }
     
-    if(this.r.isDown && this.gameOver) {
+    if(this.r.isDown && this.gameOver ) {
       console.log("reincia")
-      this.scene.restart(`Game`);
-      
+      this.scene.restart();
+    
     }
   }
   
