@@ -6,13 +6,13 @@ export default class Preload extends Phaser.Scene {
   init() {}
 
   preload() {
-    this.load.spritesheet("Gilberto", "../public/assets/Gilberto.png", {
+    this.load.spritesheet("Gilberto", "/public/assets/Gilberto.png", {
       frameWidth: 328,
       frameHeight: 500,
     });
-    this.load.image("Escenario", "../public/assets/escenario.png");
-    this.load.image("Mira", "../public/assets/mira.png");
-    this.load.image("Tile", "../public/assets/tile.png");
+    this.load.image("Escenario", "./public/assets/escenario.png");
+    this.load.image("Mira", "./public/assets/mira.png");
+    this.load.image("Tile", "./public/assets/tile.png");
     this.load.image("tomate", "./public/assets/tomate.png");
     this.load.image("zapato", "./public/assets/zapato.png");
     this.load.image("botella", "./public/assets/botella.png");
