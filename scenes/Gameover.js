@@ -1,7 +1,5 @@
 export default class Gameover extends Phaser.Scene {
   constructor() {
-    // key of the scene
-    // the key will be used to start the scene by other scenes
     super("Gameover");
   }
  init(data){
@@ -9,29 +7,51 @@ export default class Gameover extends Phaser.Scene {
     this.gameOver = data.gameOver
  }
  preload(){
-  this.load.image("Fondo", "./public/assets/fondo1.png")
+  this.load.image("Fin", "./public/assets/Fondo2.jpg")
+  this.load.audio("derrota", "./public/assets/derrota.wav")
  }
  create(){  
+  //this.backgroundMusic.stop()
 
-    this.background = this.add.image(864,490,"Fondo"); 
+  this.background = this.add.image(864,490,"Fin"); 
+  this.background.displayWidth = this.game.config.width;
+  this.background.displayHeight = this.game.config.height;
+  
+  this.GameOverAudio()
     
-    
-    this.add.text(850, 300, "¡Las risas no faltaron! No?", {
-          fontSize: "40px",
-          color: "#ffffff",
-        })
+  this.add.text(850, 200, "¡Las risas no faltaron! ¿No?", {
+    fontSize: "60px",
+    color: "#ffffff",
+  })
 
-      .setOrigin(0.5);
+  .setOrigin(0.5);
         
-    this.add.text(800, 350, `Score ${this.score}`,{
-        fontSize:"40px"
+  this.add.text(770, 250, `Score ${this.score}`,{
+      fontSize:"60px",
+      color: "#fff"
       }
-    );
+  );
 
-    this.input.keyboard.on('keydown-R', () => {
-      this.scene.start(`Game`);
+  this.input.keyboard.on('keydown-R', () => {
+      this.scene.start(`Pantalla1`);
       console.log('Presionaste R');
-    });
+  });
+  
+  this.events.on('shutdown', this.shutdown, this);
+ }
+ 
+ GameOverAudio(){
+  this.derrotaAudio = this.sound.add("derrota", {
+    volume:0.5,
+    loop: true,
+  })
+  this.derrotaAudio.play()
+ }
+ shutdown(){
+   if(this.derrotaAudio){
+      this.derrotaAudio.stop()
+      console.log("se detiene la musica")
+  }
  }
 
 }
