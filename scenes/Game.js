@@ -45,7 +45,7 @@ export default class Game extends Phaser.Scene {
       "¿Ustedes saben que viene después  de USA? USB",
       "¿Saben la diferencia entre un volcán  y un terremoto?  Que el el terremoto ensucia y el volcán lava",
       "¿Qué hace una abeja en el gimnasio?¡Zum-ba!",
-      "Niki nikol si o no?",
+      "¿Por qué estas hablando con esa zapatilla? Porque dice Converse",
       "¿Qué le dice un pez a otro pez? ¡NADA!",
       "¿Qué le dice un árbol a otro árbol? Nos dejaron plantados",
       "¿Cómo sale un mago despues de comer? Magordito",

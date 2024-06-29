@@ -1,5 +1,5 @@
-import Pantalla1 from "./scenes/Pantalla1.js";
 import Preload from "./scenes/Preload.js";
+import Pantalla1 from "./scenes/Pantalla1.js";
 import Game from "./scenes/Game.js";
 import Gameover from "./scenes/Gameover.js";
 
